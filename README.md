@@ -1,2 +1,3 @@
-# libgdx-prototype
-A prototype to explore the libgdx framework
+# libgdx Prototype
+
+A prototype to explore the libgdx framework.
