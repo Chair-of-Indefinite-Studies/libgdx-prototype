@@ -6,7 +6,7 @@
   :on-show
   (fn [screen entities]
     (update! screen :renderer (stage))
-    (assoc (texture "Clojure_logo.gif") :x 50 :y 100))
+    (assoc (texture "Clojure_logo.gif") :x 50 :y 100 :vx 0 :vy 0))
 
   :on-render
   (fn [screen entities]
