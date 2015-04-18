@@ -11,7 +11,19 @@
   :on-render
   (fn [screen entities]
     (clear!)
-    (render! screen entities)))
+    (render! screen entities))
+
+  :on-key-down
+  (fn [screen entities]
+    (cond
+      (= (:key screen) (key-code :dpad-up))
+      (println "up")
+      (= (:key screen) (key-code :dpad-down))
+      (println "down")
+      (= (:key screen) (key-code :dpad-left))
+      (println "left")
+      (= (:key screen) (key-code :dpad-right))
+      (println "right"))))
 
 (defgame higher-game
   :on-create
