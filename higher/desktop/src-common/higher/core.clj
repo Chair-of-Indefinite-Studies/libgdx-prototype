@@ -12,6 +12,10 @@
   "Move entity according to current velocity"
   (assoc entity :x (+ (:x entity) (:vx entity)) :y (+ (:y entity) (:vy entity))))
 
+(defn fall [entity]
+  "change vy according to the law of gravity"
+  (assoc entity :vy (- (:vy entity) 1)))
+
 (defscreen main-screen
   :on-show
   (fn [screen entities]
@@ -22,7 +26,7 @@
   (fn [screen entities]
     (clear!)
     (render! screen entities)
-    (map move entities))
+    (map #(-> % fall move) entities))
 
   :on-key-down
   (fn [screen entities]
