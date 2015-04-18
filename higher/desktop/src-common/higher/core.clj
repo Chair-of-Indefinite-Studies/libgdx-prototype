@@ -19,17 +19,15 @@
     :else entity))
 
 (defn bound [entity]
-  "reflects entity when hitting on of the game boundaries"
-  (let [bound-horizontally
-        (fn [entity] (if (or (< (:x entity) 0) (> (:x entity) (game :width)))
-                       (assoc entity :vx (- (:vx entity)))
-                       entity))
-        bound-vertically
-        (fn [entity] (if (or
-                          (and (< (:y entity) 0) (< (:vy entity) 0))
-                          (and (> (:y entity) (game :height)) (> (:vy entity) 0)))
-                       (assoc entity :vy (- (:vy entity)))
-                       entity))]
+  "reflects entity when hitting one of the game boundaries"
+  (let [should-reflect-horizontally? (or (< (:x entity) 0) (> (:x entity) (game :width)))
+        reflect-horizontally #(assoc % :vx (- (:vx %)))
+        bound-horizontally #(if should-reflect-horizontally? (reflect-horizontally %) %)
+        should-reflect-vertically? (or
+                                    (and (< (:y entity) 0) (< (:vy entity) 0))
+                                    (and (> (:y entity) (game :height)) (> (:vy entity) 0)))
+        reflect-vertically #(assoc % :vy (- (:vy %)))
+        bound-vertically #(if should-reflect-vertically? (reflect-vertically %) %)]
     (-> entity bound-horizontally bound-vertically)))
 
 (defscreen main-screen
