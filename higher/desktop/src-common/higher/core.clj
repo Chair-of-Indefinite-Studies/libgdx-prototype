@@ -14,19 +14,35 @@
 
 (defn fall [entity]
   "change vy according to the law of gravity"
-  (assoc entity :vy (- (:vy entity) 1)))
+  (cond
+    (> (:y entity) 0) (assoc entity :vy (- (:vy entity) 1))
+    :else entity))
+
+(defn bound [entity]
+  "reflects entity when hitting on of the game boundaries"
+  (let [bound-horizontally
+        (fn [entity] (if (or (< (:x entity) 0) (> (:x entity) (game :width)))
+                       (assoc entity :vx (- (:vx entity)))
+                       entity))
+        bound-vertically
+        (fn [entity] (if (or
+                          (and (< (:y entity) 0) (< (:vy entity) 0))
+                          (and (> (:y entity) (game :height)) (> (:vy entity) 0)))
+                       (assoc entity :vy (- (:vy entity)))
+                       entity))]
+    (-> entity bound-horizontally bound-vertically)))
 
 (defscreen main-screen
   :on-show
   (fn [screen entities]
     (update! screen :renderer (stage))
-    (assoc (texture "Clojure_logo.gif") :x 50 :y 100 :vx 0 :vy 0))
+    (assoc (texture "Clojure_logo.gif") :x 50 :y 300 :vx 0 :vy 0))
 
   :on-render
   (fn [screen entities]
     (clear!)
     (render! screen entities)
-    (map #(-> % fall move) entities))
+    (map #(-> % fall move bound) entities))
 
   :on-key-down
   (fn [screen entities]
